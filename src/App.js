@@ -1,30 +1,45 @@
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import "./App.scss";
 import Nav from "./components/Navigation/Nav";
-import Login from "./components/Login/Login";
+
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useEffect, useState } from "react";
+import _ from "lodash";
+import AppRoutes from "./routes/AppRoutes";
+
 function App() {
+  const [account, setAccount] = useState({});
+
+  useEffect(() => {
+    let session = sessionStorage.getItem("account");
+    if (session) {
+      setAccount(JSON.parse(session));
+    }
+  }, []);
+
   return (
     <>
       <Router>
+        <div className="app-header">
+          <Nav />
+        </div>
         <div className="app-container">
-          <Switch>
-            <Route path="/" exact>
-              <Nav />
-            </Route>
-            <Route path="/home">News</Route>
-            <Route path="/news">News</Route>
-            <Route path="/about">About</Route>
-            <Route path="/contact">Contact</Route>
-            <Route path="/login">
-              <Login></Login>
-            </Route>
-            <Route path="/dn">
-              <Login />
-            </Route>
-            <Route path="*">This is Error 404 Not Found !!!</Route>
-          </Switch>
+          <AppRoutes />
         </div>
       </Router>
+
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
     </>
   );
 }
